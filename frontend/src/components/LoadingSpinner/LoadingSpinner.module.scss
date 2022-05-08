@@ -1,0 +1,31 @@
+.svg {
+  --speed: 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg {
+    --speed: 7s;
+  }
+}
+
+.path {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 0;
+  animation: load var(--speed) linear infinite;
+  transform-origin: center;
+  stroke: var(--font);
+}
+
+@keyframes load {
+  0% {
+    transform: rotate(0deg);
+    stroke-dashoffset: 50;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    transform: rotate(360deg);
+    stroke-dashoffset: -50;
+  }
+}

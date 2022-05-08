@@ -4,6 +4,7 @@ import { useCanvas } from '../../hooks/useCanvas';
 import { useTranslate } from '../../hooks/useTranslate';
 import { Button } from '../Button/Button';
 import { Error } from '../Error/Error';
+import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 
 export const Canvas = () => {
   const { canvasRef, startDrawing, finishDrawing, draw, clearCanvas } =
@@ -52,25 +53,27 @@ export const Canvas = () => {
           clear board
         </Button>
       </div>
-      {isLoading
-        ? 'Loading...'
-        : expression &&
-          expression.length > 0 && (
-            <>
-              <div className={styles.expression}>
-                <span>Output: </span>
-                {expression}
-                <Button
-                  type='button'
-                  variant='outlined'
-                  size='small'
-                  onClick={copyExpression}
-                >
-                  <span>{isCopied ? 'copied' : <span>Copy</span>}</span>
-                </Button>
-              </div>
-            </>
-          )}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        expression &&
+        expression.length > 0 && (
+          <>
+            <div className={styles.expression}>
+              <span>Output: </span>
+              {expression}
+              <Button
+                type='button'
+                variant='outlined'
+                size='small'
+                onClick={copyExpression}
+              >
+                <span>{isCopied ? 'copied' : <span>Copy</span>}</span>
+              </Button>
+            </div>
+          </>
+        )
+      )}
       {error.length > 0 && <Error message={error} />}
     </>
   );
