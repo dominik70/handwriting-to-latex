@@ -1,0 +1,14 @@
+.error {
+  padding: 5px 10px;
+  display: inline-block;
+  color: var(--white);
+  max-width: 350px;
+  font-size: 1.4rem;
+  background-color: var(--red);
+  border-radius: 2px;
+  margin: 0;
+
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}

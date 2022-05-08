@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { API_URL } from '../utils/constants';
+import { isCanvasBlank } from '../utils/helpers';
 
 export const useTranslate = () => {
   const [expression, setExpression] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const translate = async (canvasRef: HTMLCanvasElement) => {
+    if (isCanvasBlank(canvasRef)) {
+      setError('Board is empty');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const url = canvasRef.toDataURL();
@@ -20,12 +27,14 @@ export const useTranslate = () => {
       });
 
       setExpression(await response.json());
+      setError('');
     } catch {
       setExpression(null);
+      setError('Failed to translate an expression');
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { translate, expression, isLoading };
+  return { translate, expression, isLoading, error };
 };

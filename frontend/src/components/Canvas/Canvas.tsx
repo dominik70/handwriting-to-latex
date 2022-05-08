@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { useCanvas } from '../../hooks/useCanvas';
 import { useTranslate } from '../../hooks/useTranslate';
 import { Button } from '../Button/Button';
+import { Error } from '../Error/Error';
 
 export const Canvas = () => {
   const { canvasRef, startDrawing, finishDrawing, draw, clearCanvas } =
     useCanvas();
-  const { expression, translate, isLoading } = useTranslate();
+  const { expression, translate, isLoading, error } = useTranslate();
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const handleTranslate = async () => {
@@ -70,6 +71,7 @@ export const Canvas = () => {
               </div>
             </>
           )}
+      {error.length > 0 && <Error message={error} />}
     </>
   );
 };
