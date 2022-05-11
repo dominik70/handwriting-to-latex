@@ -33,10 +33,13 @@ export const Canvas = () => {
       <p>Draw mathematical expression:</p>
       <canvas
         className={styles.canvas}
+        ref={canvasRef}
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
-        ref={canvasRef}
+        onTouchEnd={finishDrawing}
+        onTouchMove={draw}
+        onTouchStart={startDrawing}
       >
         Canvas
       </canvas>

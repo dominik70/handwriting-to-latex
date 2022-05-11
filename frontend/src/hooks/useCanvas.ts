@@ -24,31 +24,65 @@ export const useCanvas = () => {
     }
   }, []);
 
-  const startDrawing = ({ nativeEvent }: { nativeEvent: any }) => {
-    const { offsetX, offsetY } = nativeEvent;
+  const startDrawing = (
+    e:
+      | React.MouseEvent<HTMLCanvasElement, MouseEvent>
+      | React.TouchEvent<HTMLCanvasElement>,
+  ) => {
+    let x;
+    let y;
+
+    if ('touches' in e) {
+      const touch = e.touches[0];
+      const rect = canvasRef.current!.getBoundingClientRect();
+
+      x = touch.clientX - rect.left;
+      y = touch.clientY - rect.top;
+    } else {
+      x = e.nativeEvent.offsetX;
+      y = e.nativeEvent.offsetY;
+    }
+
     if (contextRef.current) {
       contextRef.current.beginPath();
-      contextRef.current.moveTo(offsetX, offsetY);
+      contextRef.current.moveTo(x, y);
       setIsDrawing(true);
     }
   };
 
   const finishDrawing = async () => {
-    if (contextRef.current && canvasRef.current) {
+    if (contextRef.current) {
       contextRef.current.closePath();
       setIsDrawing(false);
     }
   };
 
-  const draw = ({ nativeEvent }: { nativeEvent: MouseEvent }) => {
+  const draw = (
+    e:
+      | React.MouseEvent<HTMLCanvasElement, MouseEvent>
+      | React.TouchEvent<HTMLCanvasElement>,
+  ) => {
     if (!isDrawing) {
       return;
     }
 
-    const { offsetX, offsetY } = nativeEvent;
+    let x;
+    let y;
+
+    if ('touches' in e) {
+      var touch = e.touches[0];
+
+      const rect = canvasRef.current!.getBoundingClientRect();
+
+      x = touch.clientX - rect.left;
+      y = touch.clientY - rect.top;
+    } else {
+      x = e.nativeEvent.offsetX;
+      y = e.nativeEvent.offsetY;
+    }
 
     if (contextRef.current) {
-      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.lineTo(x, y);
       contextRef.current.stroke();
     }
   };
