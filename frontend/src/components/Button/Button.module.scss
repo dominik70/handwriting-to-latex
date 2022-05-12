@@ -16,13 +16,12 @@
   }
 
   &.outlined {
-    background-color: transparent;
-    border: 2px solid var(--black);
-    color: var(--black);
+    color: var(--white);
+    background-color: var(--gray);
 
     &:hover,
     &:focus {
-      background-color: var(--primary-light);
+      background-color: var(--dark-gray);
     }
   }
 

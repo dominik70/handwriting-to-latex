@@ -1,11 +1,11 @@
 html {
-  --font: #324152;
   --primary-light: #d0d1f0;
   --primary: #5457b6;
   --primary-dark: #363aa1;
   --red: #ed6468;
   --light-red: #ffb8bb;
   --gray: #67727e;
+  --dark-gray: #324152;
   --background: #f0f2f8;
   --white: #ffffff;
   --black: #000000;
@@ -33,8 +33,6 @@ button {
 
 * {
   box-sizing: border-box;
-  // margin: 0;
-  // padding: 0;
 }
 
 .visually-hidden {

@@ -1,5 +1,3 @@
-export const CANVAS_WIDTH = 660;
-export const CANVAS_HEIGHT = 150;
 export const API_URL = process.env.REACT_APP_API_URL;
 export const SYMBOLS = [
   '0',

@@ -4,7 +4,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .svg {
-    --speed: 7s;
+    --speed: 5s;
   }
 }
 
@@ -13,7 +13,7 @@
   stroke-dashoffset: 0;
   animation: load var(--speed) linear infinite;
   transform-origin: center;
-  stroke: var(--font);
+  stroke: var(--dark-gray);
 }
 
 @keyframes load {

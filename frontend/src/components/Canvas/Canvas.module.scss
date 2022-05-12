@@ -4,6 +4,7 @@
   border: 2px solid #000000;
   border-radius: 4px;
   touch-action: none;
+  max-width: 97vw;
 }
 
 .buttonContainer {
@@ -12,6 +13,7 @@
   margin-top: 30px;
   margin-bottom: 30px;
   align-items: center;
+  padding: 0 5px;
 }
 
 .expression {

@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../utils/constants';
 
 export const useCanvas = () => {
   const [isDrawing, setIsDrawing] = useState(false);
@@ -9,20 +8,20 @@ export const useCanvas = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.width = CANVAS_WIDTH;
-      canvas.height = CANVAS_HEIGHT;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
       const context = canvas.getContext('2d');
 
       if (context) {
         context.lineCap = 'round';
         context.strokeStyle = 'black';
         context.fillStyle = 'white';
-        context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        context.fillRect(0, 0, canvas.width, canvas.height);
         context.lineWidth = 1.5;
         contextRef.current = context;
       }
     }
-  }, []);
+  }, [window.innerWidth]);
 
   const startDrawing = (
     e:
@@ -35,9 +34,12 @@ export const useCanvas = () => {
     if ('touches' in e) {
       const touch = e.touches[0];
       const rect = canvasRef.current!.getBoundingClientRect();
+      const el = touch.target as HTMLElement;
+      const borderX = (el.clientWidth - el.offsetWidth) / 2;
+      const borderY = (el.clientHeight - el.offsetHeight) / 2;
 
-      x = touch.clientX - rect.left;
-      y = touch.clientY - rect.top;
+      x = touch.clientX - rect.left + borderX;
+      y = touch.clientY - rect.top + borderY;
     } else {
       x = e.nativeEvent.offsetX;
       y = e.nativeEvent.offsetY;
@@ -70,12 +72,14 @@ export const useCanvas = () => {
     let y;
 
     if ('touches' in e) {
-      var touch = e.touches[0];
-
+      const touch = e.touches[0];
       const rect = canvasRef.current!.getBoundingClientRect();
+      const el = touch.target as HTMLElement;
+      const borderX = (el.clientWidth - el.offsetWidth) / 2;
+      const borderY = (el.clientHeight - el.offsetHeight) / 2;
 
-      x = touch.clientX - rect.left;
-      y = touch.clientY - rect.top;
+      x = touch.clientX - rect.left + borderX;
+      y = touch.clientY - rect.top + borderY;
     } else {
       x = e.nativeEvent.offsetX;
       y = e.nativeEvent.offsetY;

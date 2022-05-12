@@ -30,7 +30,7 @@ export const Canvas = () => {
 
   return (
     <>
-      <p>Draw mathematical expression:</p>
+      <p id='label'>Write math expression below:</p>
       <canvas
         className={styles.canvas}
         ref={canvasRef}
@@ -40,13 +40,11 @@ export const Canvas = () => {
         onTouchEnd={finishDrawing}
         onTouchMove={draw}
         onTouchStart={startDrawing}
+        aria-labelledby='label'
       >
         Canvas
       </canvas>
       <div className={styles.buttonContainer}>
-        <Button type='submit' onClick={handleTranslate} disabled={isLoading}>
-          Translate to LaTeX
-        </Button>
         <Button
           type='button'
           variant='outlined'
@@ -54,6 +52,9 @@ export const Canvas = () => {
           onClick={clearCanvas}
         >
           clear board
+        </Button>
+        <Button type='submit' onClick={handleTranslate} disabled={isLoading}>
+          Translate to LaTeX
         </Button>
       </div>
       {isLoading ? (
