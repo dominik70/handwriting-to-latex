@@ -30,7 +30,9 @@ export const Canvas = () => {
 
   return (
     <>
-      <p id='label'>Write math expression below:</p>
+      <p id='label' className={styles.label}>
+        Write mathematical expression:
+      </p>
       <canvas
         className={styles.canvas}
         ref={canvasRef}

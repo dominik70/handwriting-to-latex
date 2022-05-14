@@ -10,7 +10,7 @@ export const Symbols = () => {
           <figure className={styles.symbol} key={symbol}>
             <figcaption className={styles.label}>{symbol}</figcaption>
             <img
-              src={`./img/sample-data/${symbol}.jpg`}
+              src={`./img/sample_data/${symbol}.jpg`}
               alt={symbol}
               className={styles.img}
             />
