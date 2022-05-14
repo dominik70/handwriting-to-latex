@@ -14,6 +14,7 @@ export const SYMBOLS = [
   ')',
   '+',
   '-',
+  '=',
   'sqrt',
   'alpha',
   'beta',

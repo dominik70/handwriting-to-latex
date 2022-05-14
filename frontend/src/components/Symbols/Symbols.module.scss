@@ -1,0 +1,28 @@
+.symbols {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 680px;
+  max-width: 100vw;
+  gap: 8px;
+}
+
+.symbol {
+  text-align: center;
+}
+
+.label {
+  margin-bottom: 5px;
+}
+
+.img {
+  background-color: var(--white);
+  border: 2px solid var(--black);
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.heading {
+  margin: 20px 0;
+  text-align: center;
+}
