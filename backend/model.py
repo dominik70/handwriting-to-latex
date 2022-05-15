@@ -131,8 +131,9 @@ class Model():
                 inner, (rowsPadding, colsPadding), "constant", constant_values=(255, 255)
             )
             thinned = 255 - cv2.ximgproc.thinning(255 - padded)
+            normalized = thinned / 255
 
-            self.symbol_images.append(thinned)
+            self.symbol_images.append(normalized)
 
     def predict(self):
         self.get_bounding_boxes()
@@ -141,6 +142,7 @@ class Model():
             return 'Failed to recognize any symbol'
 
         self.normalize()
+
         bounding_boxes = []
         symbol_images = self.symbol_images
 
@@ -157,7 +159,7 @@ class Model():
                     "ymax": pos["ymax"],
                     "symbol": sym,
                     "id": -1,
-                    "did": False,
+                    "done": False,
                 }
             )
         bounding_boxes = sorted(
@@ -217,13 +219,13 @@ def set_fraction(expression):
 
     while i < len(expression):
         cur = expression[i]
-        if not cur["did"] and cur["symbol"] == "-":
+        if not cur["done"] and cur["symbol"] == "-":
             j = i
             while True:
                 if j == 0:
                     break
                 prev = expression[j - 1]
-                if prev["did"]:
+                if prev["done"]:
                     break
                 prevX = (prev["xmin"] + prev["xmax"]) / 2
                 if cur["xmin"] <= prevX and cur["xmax"] >= prevX:
@@ -252,17 +254,17 @@ def set_fraction(expression):
                 j += 1
             if len(up) != 0 and len(down) != 0:
                 for d in down:
-                    d["did"] = True
+                    d["done"] = True
                 for u in up:
-                    u["did"] = True
-                cur["did"] = True
+                    u["done"] = True
+                cur["done"] = True
                 up = set_fraction(up_tmp)
                 down = set_fraction(down_tmp)
                 compound.append(
                     {
                         "type": "fraction",
                         "symbol": "-",
-                        "did": False,
+                        "done": False,
                         "xmin": cur["xmin"],
                         "xmax": cur["xmax"],
                         "ymin": cur["ymin"],
@@ -274,11 +276,11 @@ def set_fraction(expression):
                 )
         i += 1
     for cur in expression:
-        if not cur["did"]:
+        if not cur["done"]:
             compound.append(
                 {
                     "type": "normal",
-                    "did": False,
+                    "done": False,
                     "symbol": cur["symbol"],
                     "xmin": cur["xmin"],
                     "xmax": cur["xmax"],
@@ -298,7 +300,7 @@ def set_square_root(bonding_boxes):
     i = 0
     while i < len(bonding_boxes):
         cur = bonding_boxes[i]
-        if cur["did"]:
+        if cur["done"]:
             i += 1
             continue
         elif cur["type"] == "fraction":
@@ -310,7 +312,7 @@ def set_square_root(bonding_boxes):
                     "xmax": cur["xmax"],
                     "ymin": cur["ymin"],
                     "ymax": cur["ymax"],
-                    "did": False,
+                    "done": False,
                     "up": set_square_root(cur["up"]),
                     "down": set_square_root(cur["down"]),
                     "inner": [],
@@ -320,11 +322,11 @@ def set_square_root(bonding_boxes):
             continue
 
         if i == len(bonding_boxes) - 1:
-            cur["did"] = True
+            cur["done"] = True
             compound.append(
                 {
                     "type": "normal",
-                    "did": False,
+                    "done": False,
                     "symbol": cur["symbol"],
                     "xmin": cur["xmin"],
                     "xmax": cur["xmax"],
@@ -341,27 +343,27 @@ def set_square_root(bonding_boxes):
         inner = []
 
         while i < len(bonding_boxes) - 1:
-            later = bonding_boxes[i + 1]
-            if later["did"]:
+            next = bonding_boxes[i + 1]
+            if next["done"]:
                 continue
-            laterX = (later["xmin"] + later["xmax"]) / 2
-            laterY = (later["ymin"] + later["ymax"]) / 2
+            nextX = (next["xmin"] + next["xmax"]) / 2
+            nextY = (next["ymin"] + next["ymax"]) / 2
             if (
-                cur["xmin"] <= laterX <= cur["xmax"]
-                and cur["ymin"] <= laterY <= cur["ymax"]
+                cur["xmin"] <= nextX <= cur["xmax"]
+                and cur["ymin"] <= nextY <= cur["ymax"]
             ):
-                inner.append(later.copy())
-                later["did"] = True
+                inner.append(next.copy())
+                next["done"] = True
             else:
                 break
             i += 1
 
         if len(inner) == 0:
-            cur["did"] = True
+            cur["done"] = True
             compound.append(
                 {
                     "type": "normal",
-                    "did": False,
+                    "done": False,
                     "symbol": cur["symbol"],
                     "xmin": cur["xmin"],
                     "xmax": cur["xmax"],
@@ -377,7 +379,7 @@ def set_square_root(bonding_boxes):
                 {
                     "type": "square_root",
                     "symbol": "sqrt",
-                    "did": False,
+                    "done": False,
                     "xmin": cur["xmin"],
                     "xmax": cur["xmax"],
                     "ymin": cur["ymin"],
@@ -397,7 +399,7 @@ def set_superscript(compounds):
 
     while i < len(compounds):
         cur = compounds[i]
-        if cur["did"]:
+        if cur["done"]:
             i += 1
             continue
         elif cur["type"] == "fraction":
@@ -409,7 +411,7 @@ def set_superscript(compounds):
                     "xmax": cur["xmax"],
                     "ymin": cur["ymin"],
                     "ymax": cur["ymax"],
-                    "did": False,
+                    "done": False,
                     "up": set_superscript(cur["up"]),
                     "down": set_superscript(cur["down"]),
                     "inner": [],
@@ -426,7 +428,7 @@ def set_superscript(compounds):
                     "xmax": cur["xmax"],
                     "ymin": cur["ymin"],
                     "ymax": cur["ymax"],
-                    "did": False,
+                    "done": False,
                     "up": [],
                     "down": [],
                     "inner": set_superscript(cur["inner"]),
@@ -437,21 +439,21 @@ def set_superscript(compounds):
 
         up = []
         while i < len(compounds) - 1:
-            later = compounds[i + 1]
-            if later["did"]:
+            next = compounds[i + 1]
+            if next["done"]:
                 continue
             if (
-                cur["ymin"] >= later["ymin"]
-                and cur["ymin"] + 0.5 * (cur["ymax"] - cur["ymin"]) >= later["ymax"]
+                cur["ymin"] >= next["ymin"]
+                and cur["ymin"] + 0.5 * (cur["ymax"] - cur["ymin"]) >= next["ymax"]
             ):
-                up.append(later.copy())
-                later["did"] = True
+                up.append(next.copy())
+                next["done"] = True
             else:
                 break
             i += 1
 
         if len(up) == 0:
-            cur["did"] = True
+            cur["done"] = True
             compound.append(
                 {
                     "type": "normal",
@@ -463,17 +465,17 @@ def set_superscript(compounds):
                     "up": [],
                     "down": [],
                     "inner": [],
-                    "did": False,
+                    "done": False,
                 }
             )
         else:
-            cur["did"] = True
+            cur["done"] = True
             up = set_superscript(up)
             compound.append(
                 {
                     "type": "superscript",
                     "symbol": cur["symbol"],
-                    "did": False,
+                    "done": False,
                     "xmin": cur["xmin"],
                     "xmax": cur["xmax"],
                     "ymin": cur["ymin"],
@@ -511,4 +513,4 @@ def combine_expression(compound):
 def get_expression(compounds):
     expression = map(combine_expression, compounds)
 
-    return " ".join(expression)
+    return "".join(expression)

@@ -1,16 +1,27 @@
 import numpy as np
-from keras.models import load_model
-from keras.preprocessing.image import img_to_array
-from .symbols import label_encoder
+from .symbols import symbols
+import tflite_runtime.interpreter as tflite
 
-model = load_model('./model')
+
+model_lite = tflite.Interpreter("model.tflite")
+model_lite.allocate_tensors()
+input_details = model_lite.get_input_details()[0]
+output_details = model_lite.get_output_details()[0]
 
 
 def get_predictions(target_images):
-    img = img_to_array(target_images) / 255
-    img = np.expand_dims(img, axis=3)
+    images = np.array(target_images)
+    images = images.astype("float32")
 
-    encoded_vectors = np.argmax(model.predict(img), axis=1)
-    predictions = label_encoder.inverse_transform(encoded_vectors)
+    predictions = []
+
+    for img in images:
+        model_lite.set_tensor(
+            input_details['index'], np.expand_dims(img, (0, 3)))
+        model_lite.invoke()
+
+        prediction_index = np.argmax(
+            model_lite.get_tensor(output_details['index']))
+        predictions.append(symbols[prediction_index])
 
     return predictions
