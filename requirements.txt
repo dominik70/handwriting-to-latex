@@ -1,0 +1,6 @@
+fastapi==0.76.0
+numpy==1.22.3
+opencv-contrib-python-headless==4.5.5.64
+tflite-runtime==2.8.0
+uvicorn==0.15.0
+python-multipart==0.0.5

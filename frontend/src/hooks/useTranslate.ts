@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { API_URL } from '../utils/constants';
 import { isCanvasBlank } from '../utils/helpers';
 
 export const useTranslate = () => {
@@ -21,7 +20,7 @@ export const useTranslate = () => {
       const fd = new FormData();
       fd.append('file', blob);
 
-      const response = await fetch(`${API_URL}/api/translate`, {
+      const response = await fetch(`/api/translate`, {
         method: 'POST',
         body: fd,
       });

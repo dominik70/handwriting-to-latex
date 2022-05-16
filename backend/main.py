@@ -1,20 +1,11 @@
 import os
 import cv2
 import numpy as np
-from dotenv import load_dotenv
 from fastapi import FastAPI, File,  UploadFile
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from model import Model
 
-load_dotenv()
-ORIGIN_URL = os.getenv('ORIGIN_URL')
-
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[ORIGIN_URL],
-    allow_methods=["POST"],
-)
 
 
 @app.post("/api/translate")
@@ -33,3 +24,5 @@ async def translate(file: UploadFile = File(...)):
     prediction = model.predict()
 
     return prediction
+
+app.mount("/", StaticFiles(directory="build/static/", html=True), name="static")
