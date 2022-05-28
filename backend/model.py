@@ -205,7 +205,9 @@ class Model():
         right_hand_side = get_expression(right_compound)
         left_hand_side = get_expression(left_compound)
 
-        if len(right_hand_side) == 0:
+        if len(right_hand_side) == 0 and len(left_hand_side) == 0:
+            return '='
+        elif len(right_hand_side) == 0:
             return left_hand_side
         elif len(left_hand_side) == 0:
             return right_hand_side
