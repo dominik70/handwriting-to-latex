@@ -8,7 +8,7 @@ export const useTranslate = () => {
 
   const translate = async (canvasRef: HTMLCanvasElement) => {
     if (isCanvasBlank(canvasRef)) {
-      setError('Board is empty');
+      setError('The board cannot be empty');
       return;
     }
 

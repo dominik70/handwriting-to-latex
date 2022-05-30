@@ -1,4 +1,3 @@
-import os
 import cv2
 import numpy as np
 from fastapi import FastAPI, File,  UploadFile
@@ -25,4 +24,4 @@ async def translate(file: UploadFile = File(...)):
 
     return prediction
 
-app.mount("/", StaticFiles(directory="build/static/", html=True), name="static")
+app.mount("/", StaticFiles(directory="build/", html=True), name="static")
