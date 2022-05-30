@@ -6,7 +6,9 @@ This app allows you to handwrite mathematical expressions on the canvas and tran
 
 ## Demo
 
-http://handwritten-math.herokuapp.com/
+![demo gif](https://i.imgur.com/YmvEE6V.gif)
+
+https://handwritten-test.herokuapp.com/
 
 ## Technologies
 
