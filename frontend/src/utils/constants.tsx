@@ -15,6 +15,8 @@ export const SYMBOLS = [
   '-',
   '=',
   'sqrt',
+  'fraction',
+  'power',
   'alpha',
   'beta',
   'a',

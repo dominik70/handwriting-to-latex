@@ -11,7 +11,7 @@ export const Symbols = () => {
             <figcaption className={styles.label}>{symbol}</figcaption>
             <img
               src={`./img/sample_data/${symbol}.jpg`}
-              alt={symbol}
+              alt={`handwritten ${symbol}`}
               className={styles.img}
             />
           </figure>
