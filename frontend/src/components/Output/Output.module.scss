@@ -1,0 +1,16 @@
+.recognizedExpression {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.code {
+  background-color: var(--white);
+  border: 1px solid var(--light-gray);
+  color: var(--dark-gray);
+  font-size: 1.4rem;
+  padding: 5px 8px;
+  margin: 0 10px;
+  border-radius: 2px;
+}

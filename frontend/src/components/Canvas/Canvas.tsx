@@ -1,30 +1,20 @@
 import styles from './Canvas.module.scss';
-import { useState } from 'react';
 import { useCanvas } from '../../hooks/useCanvas';
 import { useTranslate } from '../../hooks/useTranslate';
 import { Button } from '../Button/Button';
 import { Error } from '../Error/Error';
-import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
+import { Output } from '../Output/Output';
 
 export const Canvas = () => {
   const { canvasRef, startDrawing, finishDrawing, draw, clearCanvas } =
     useCanvas();
   const { expression, translate, isLoading, error } = useTranslate();
-  const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const handleTranslate = async () => {
-    const url = canvasRef?.current;
+    const canvas = canvasRef?.current;
 
-    if (url) {
-      translate(url);
-      setIsCopied(false);
-    }
-  };
-
-  const copyExpression = () => {
-    if (expression) {
-      navigator.clipboard.writeText(expression);
-      setIsCopied(true);
+    if (canvas) {
+      translate(canvas);
     }
   };
 
@@ -39,9 +29,9 @@ export const Canvas = () => {
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
+        onTouchStart={startDrawing}
         onTouchEnd={finishDrawing}
         onTouchMove={draw}
-        onTouchStart={startDrawing}
         aria-labelledby='label'
       >
         Canvas
@@ -59,28 +49,11 @@ export const Canvas = () => {
           Translate to LaTeX
         </Button>
       </div>
-      {isLoading ? (
-        <LoadingSpinner />
+      {error.length > 0 ? (
+        <Error message={error} />
       ) : (
-        expression &&
-        expression.length > 0 && (
-          <>
-            <div className={styles.expression}>
-              <span>Output: </span>
-              {expression}
-              <Button
-                type='button'
-                variant='outlined'
-                size='small'
-                onClick={copyExpression}
-              >
-                <span>{isCopied ? 'copied' : <span>Copy</span>}</span>
-              </Button>
-            </div>
-          </>
-        )
+        <Output isLoading={isLoading} expression={expression} />
       )}
-      {error.length > 0 && <Error message={error} />}
     </>
   );
 };
