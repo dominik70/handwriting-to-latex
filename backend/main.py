@@ -3,8 +3,12 @@ import numpy as np
 from fastapi import FastAPI, File,  UploadFile
 from fastapi.staticfiles import StaticFiles
 from model import Model
+from os import path
 
 app = FastAPI()
+
+print(path.abspath(path.join(path.dirname(__file__),
+                             '../frontend/build/')))
 
 
 @app.post("/api/translate")
@@ -24,4 +28,5 @@ async def translate(file: UploadFile = File(...)):
 
     return prediction
 
-app.mount("/", StaticFiles(directory="build/", html=True), name="static")
+app.mount("/", StaticFiles(directory=path.abspath(path.join(path.dirname(__file__),
+          '../frontend/build/')), html=True), name="static")
